@@ -85,6 +85,7 @@
 		>;
 		qcom,mdss-panel-on-dimming-delay = <200>;
 		qcom,mdss-dsi-panel-dc-threshold = <320>;
+		qcom,suspend-ulps-enabled;
 		qcom,mdss-dsi-display-timings {
 			timing@0{
 				qcom,mdss-dsi-panel-width = <1080>;
