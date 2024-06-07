@@ -1080,7 +1080,19 @@ int dsi_message_validate_tx_mode(struct dsi_ctrl *dsi_ctrl,
 			pr_err(" Cannot transfer command,ops not defined\n");
 			return -ENOTSUPP;
 		}
+		if ((cmd_len + 4) > SZ_4K) {
+			pr_err("Cannot transfer,size is greater than 4096\n");
+			return -ENOTSUPP;
+		}
 	}
+
+	if (*flags & DSI_CTRL_CMD_FETCH_MEMORY) {
+		if ((dsi_ctrl->cmd_len + cmd_len + 4) > SZ_4K) {
+			pr_err("Cannot transfer,size is greater than 4096\n");
+			return -ENOTSUPP;
+		}
+	}
+
 	return rc;
 }
 
@@ -1889,7 +1901,7 @@ static struct platform_driver dsi_ctrl_driver = {
 	},
 };
 
-#if defined(CONFIG_DEBUG_FS)
+#if 0
 
 void dsi_ctrl_debug_dump(u32 *entries, u32 size)
 {

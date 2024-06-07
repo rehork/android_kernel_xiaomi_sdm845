@@ -1,5 +1,5 @@
 /* Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
- * Copyright (C) 2018 XiaoMi, Inc.
+ * Copyright (C) 2019 XiaoMi, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -41,6 +41,8 @@
 
 #define CREATE_TRACE_POINTS
 #include <trace/events/lmh.h>
+#undef CREATE_TRACE_POINTS
+#include <trace/events/power.h>
 
 #define LIMITS_DCVSH                0x10
 #define LIMITS_PROFILE_CHANGE       0x01
@@ -143,7 +145,6 @@ static int limits_dcvs_get_freq_limits(uint32_t cpu, unsigned long *max_freq,
 static unsigned long limits_mitigation_notify(struct limits_dcvs_hw *hw)
 {
 	uint32_t val = 0;
-	unsigned int i;
 	struct device *cpu_dev = NULL;
 	unsigned long freq_val, max_limit = 0;
 	struct dev_pm_opp *opp_entry;
@@ -179,20 +180,18 @@ static unsigned long limits_mitigation_notify(struct limits_dcvs_hw *hw)
 	max_limit = FREQ_HZ_TO_KHZ(freq_val);
 
 	sched_update_cpu_freq_min_max(&hw->core_map, 0, max_limit);
-
-	get_online_cpus();
-	for_each_online_cpu(i) {
-		pr_debug("Updating policy for cpu%d\n", i);
-		cpufreq_update_policy(i);
-	}
-	put_online_cpus();
-
 	pr_debug("CPU:%d max limit:%lu\n", cpumask_first(&hw->core_map),
 			max_limit);
 	trace_lmh_dcvs_freq(cpumask_first(&hw->core_map), max_limit);
+	trace_clock_set_rate(hw->sensor_name,
+			max_limit,
+			cpumask_first(&hw->core_map));
 
 notify_exit:
 	hw->hw_freq_limit = max_limit;
+	get_online_cpus();
+	cpufreq_update_policy(cpumask_first(&hw->core_map));
+	put_online_cpus();
 	return max_limit;
 }
 
@@ -709,6 +708,7 @@ static int limits_dcvs_probe(struct platform_device *pdev)
 	hw->lmh_freq_attr.attr.name = "lmh_freq_limit";
 	hw->lmh_freq_attr.show = lmh_freq_limit_show;
 	hw->lmh_freq_attr.attr.mode = 0444;
+	sysfs_attr_init(&hw->lmh_freq_attr.attr);
 	device_create_file(&pdev->dev, &hw->lmh_freq_attr);
 
 probe_exit:
