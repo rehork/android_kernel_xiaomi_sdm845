@@ -2291,7 +2291,6 @@ err:
 
 static int qcedev_init(void)
 {
-
 #ifdef CONFIG_DEBUG_FS
 	_qcedev_debug_init();
 #endif
@@ -2303,8 +2302,7 @@ static void qcedev_exit(void)
 {
 #ifdef CONFIG_DEBUG_FS
 	debugfs_remove_recursive(_debug_dent);
-
-#endif	
+#endif
 	platform_driver_unregister(&qcedev_plat_driver);
 }
 
