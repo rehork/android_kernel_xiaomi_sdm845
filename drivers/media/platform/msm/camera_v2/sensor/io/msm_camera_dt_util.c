@@ -1553,7 +1553,7 @@ int msm_camera_power_up(struct msm_camera_power_ctrl_t *ctrl,
 				msm_camera_enable_i2c_mux(ctrl->i2c_conf);
 			break;
 		default:
-			pr_err("%s error power seq type %d\n", __func__,
+			pr_debug("%s error power seq type %d\n", __func__,
 				power_setting->seq_type);
 			break;
 		}
@@ -1613,7 +1613,7 @@ power_up_failed:
 				msm_camera_disable_i2c_mux(ctrl->i2c_conf);
 			break;
 		default:
-			pr_err("%s error power seq type %d\n", __func__,
+			pr_debug("%s error power seq type %d\n", __func__,
 				power_setting->seq_type);
 			break;
 		}
@@ -1759,7 +1759,7 @@ int msm_camera_power_down(struct msm_camera_power_ctrl_t *ctrl,
 				msm_camera_disable_i2c_mux(ctrl->i2c_conf);
 			break;
 		default:
-			pr_err("%s error power seq type %d\n", __func__,
+			pr_debug("%s error power seq type %d\n", __func__,
 				pd->seq_type);
 			break;
 		}
