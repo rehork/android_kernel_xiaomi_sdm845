@@ -463,6 +463,12 @@ static const struct midr_range arm64_bp_harden_smccc_cpus[] = {
 	{},
 };
 
+static const struct midr_range arm64_bp_harden_smccc_cpus_qti[] = {
+	MIDR_ALL_VERSIONS(MIDR_KRYO3G),
+	MIDR_ALL_VERSIONS(MIDR_KRYO2XX_GOLD),
+	{},
+};
+
 #endif
 
 #ifdef CONFIG_ARM64_ERRATUM_1742098
