@@ -3101,6 +3101,7 @@ void f2fs_allocate_data_block(struct f2fs_sb_info *sbi, struct page *page,
 		f2fs_inode_chksum_set(sbi, page);
 	}
 
+
 	if (add_list) {
 		struct f2fs_bio_info *io;
 
